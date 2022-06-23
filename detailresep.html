@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <title>Detail resep</title>
+</head>
+<body>
+    <img id="loading" src="loading.gif">
+    <div class="container mx-auto p-6 w-4/5 mt-5">
+        <!--Menu-->
+        <div class="py-10 w-fit mx-auto">
+            <ul class="mx-auto">
+                <li class="m-8 py-2 px-3 inline text-pink-500 font-semibold hover:bg-sky-400"><a href="index.html">Home</a></li>
+                <li class="m-8 py-2 px-3 inline text-pink-500 text-pink font-semibold hover:bg-sky-400"><a href="kategori.html">Kategori</a></li>
+                <li class="m-8 py-2 px-6 inline font-semibold text-pink-500 hover:bg-sky-400"><a href="resep.html">Resep Dunia</a></li>
+                <li class="m-8 py-2 px-3 inline font-semibold text-pink-500 hover:bg-sky-400"><a href="kontak.html">Tentang Kami</a></li>
+            </ul>
+        </div>
+        <p class="w-fit mx-auto py-10 text-3xl font-bold text-blue-500">Kamu Memilih <div id="pilih"></div></p>
+        <div id="resep" class="grid grid-cols-4 gap-4"></div>
+
+        <div class="w-full my-20">
+            <!--header-->
+                <div class="flex rounded-md overflow-hidden">
+                    <div id="photo" class="flex-auto w-1/2"></div>
+                    <div class="flex-auto w-1/2 py-48 bg-sky-200">
+                        <h2 id="name" class="text-3xl font-semibold font-serif text-center text-gray-700"></h2>
+                        <p class="text-center pt-5 text-gray-700">
+                            <span id="category" class="px-2 py-1 border-solid border-2 border-gray-600"></span>
+                            <span id="area" class="ml-10 px-2 border-solid border-2 border-gray-600"></span>
+                        </p>
+                    </div>
+                </div>
+                <p id="ingredients" class="px-28"></p>
+                <p id="instructions" class="pb-10 px-28"></p>
+        <p class="text-pink-500 text-center py-10">Siti Nurhamdiyah@2022</p>
+    </div>
+</div>
+
+<!--youtube-->
+<div class="fixed bottom-10 right-2">
+    <iframe id="youtube" class="float-right" width="250" height="165"></iframe>
+</div>
+<script>
+    $(function(){
+        //tangkap id
+        $.urlParam=function(name){
+            var result=new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            return result[1] || 0;
+        }
+        let idMeal= $.urlParam('id');
+        $.ajax({
+            method : "GET",
+            url: "www.themealdb.com/api/json/v1/1/filter.php?c=" + id
+            url: "www.themealdb.com/api/json/v1/1/lookup.php?i=" + id
+
+        })
+        .done(function(msg) {
+            //koversi ke dalam array
+            let meals = msg.meals;
+            let meal = meals[0];
+
+            $("#photo").css('background-image', 'url('+meal.strMealThumb +')')
+            $("#name").text(meal.strMeal);
+            $("#area").text(meal.strArea);
+            $("#category").text(meal.strCategory);
+            $("#instructions").html("<p class='font-semibold py-10 text-2xl'> Instructions</p>"+meal.strInstructions);
+
+            let bahan="";
+            for (let index = 1; index <= Array.length; index++) {
+                if (meal['strIngredient'+index]==="") break;
+
+                bahan +=meal['strIngredient'+index]+""+ meal['strMeasure'+index]+"<br/>";
+            }
+            $("#ingredients").html("<p class='font-semibold py-10 text-2xl'> Ingredients</p>"+bahan);
+
+            let yt = meal.strYoutube;
+            yt = yt.replace('watch?v=','embed/')
+            $("#youtube").attr('src',yt);
+            $("#loading").hide(); //sembunyikan gambar loading jika data telah masuk
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <title>Resep</title>
+</head>
+
+<body>
+    <img id="loading" src="loading.gif">
+    <div class="container mx-auto p-6 w-4/5 mt-5">
+        <div class="w-fit mx-auto">
+            <ul class="mx-auto">
+                <li class="m-8 py-2 px-3 inline text-pink-500 font-semibold hover:bg-sky-400"><a href="index.html">Home</a></li>
+                <li class="m-8 py-2 px-3 inline text-pink-500 text-pink font-semibold hover:bg-sky-400"><a href="kategori.html">Kategori</a></li>
+                <li class="m-8 py-2 px-6 inline font-semibold text-pink-500 hover:bg-sky-400"><a href="resep.html">Resep Dunia</a></li>
+                <li class="m-8 py-2 px-3 inline font-semibold text-pink-500 hover:bg-sky-400"><a href="kontak.html">Tentang Kami</a></li></ul>
+        </div>
+
+        <P class="w-fit mx-auto py-10 text-2xl font-bold text-violet-500">Masak Apa Hari Ini?</P>
+
+        <div id="resep" class="grid grid-cols-3 gap-4"> </div>
+        <p class="text-pink-500 text-center py-10">Siti Nurhamdiyah@2022</p>
+    </div>
+    <script>
+        $(function(){
+            $.ajax({
+                method : "GET",
+                url: "https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood"
+
+            })
+            .done(function(msg) {
+                //koversi ke dalam array
+                let meals = msg.meals;
+                let isidata = "";
+
+                //menampilkan banyak data
+                $.each(meals, function(index){
+                   isidata +="<div class= 'h-60 overflow-hidden bg-center bg-cover rounded-md' style='background-image:url("+meals[index].strMealThumb+");'></div>";
+             
+                });
+                $("#resep").append(isidata);
+                $("#loading").hide(); //sembunyikan gambar loading jika data telah masuk
+            });
+        });
+    </script>
+</body>
+
+</html> 
